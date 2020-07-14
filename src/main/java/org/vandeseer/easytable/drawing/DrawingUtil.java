@@ -6,6 +6,8 @@ import org.vandeseer.easytable.settings.BorderStyle;
 import java.awt.*;
 import java.io.IOException;
 
+import static org.vandeseer.easytable.settings.BorderStyle.SOLID;
+
 public class DrawingUtil {
 
     private DrawingUtil() {
@@ -13,6 +15,7 @@ public class DrawingUtil {
 
     public static void drawText(PDPageContentStream contentStream, PositionedStyledText styledText) throws IOException {
         contentStream.beginText();
+        contentStream.setTextRise(styledText.getTextRise());
         contentStream.setNonStrokingColor(styledText.getColor());
         contentStream.setFont(styledText.getFont(), styledText.getFontSize());
         contentStream.newLineAtOffset(styledText.getX(), styledText.getY());
@@ -34,8 +37,10 @@ public class DrawingUtil {
         contentStream.setLineWidth(line.getWidth());
         contentStream.lineTo(line.getEndX(), line.getEndY());
         contentStream.setStrokingColor(line.getColor());
+        contentStream.setLineDashPattern(line.getBorderStyle().getPattern(), line.getBorderStyle().getPhase());
         contentStream.stroke();
         contentStream.setStrokingColor(line.getResetColor());
+        contentStream.setLineDashPattern(SOLID.getPattern(), SOLID.getPhase());
     }
 
     public static void drawRectangle(PDPageContentStream contentStream, PositionedRectangle rectangle)

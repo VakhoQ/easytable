@@ -3,10 +3,9 @@ package org.vandeseer.easytable.structure;
 import lombok.*;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.vandeseer.easytable.settings.HorizontalAlignment;
-import org.vandeseer.easytable.settings.Settings;
-import org.vandeseer.easytable.settings.VerticalAlignment;
+import org.vandeseer.easytable.settings.*;
 import org.vandeseer.easytable.structure.cell.AbstractCell;
+import org.vandeseer.easytable.structure.cell.TextCell;
 
 import java.awt.*;
 import java.util.List;
@@ -22,6 +21,8 @@ public class Table {
     private static final int DEFAULT_FONT_SIZE = 12;
     private static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
     private static final Color DEFAULT_BORDER_COLOR = Color.BLACK;
+    private static final BorderStyleInterface DEFAULT_BORDER_STYLE = BorderStyle.SOLID;
+    private static final float DEFAULT_PADDING = 4f;
 
     private static final HorizontalAlignment DEFAULT_HORIZONTAL_ALIGNMENT = HorizontalAlignment.LEFT;
     private static final VerticalAlignment DEFAULT_VERTICAL_ALIGNMENT = VerticalAlignment.MIDDLE;
@@ -37,9 +38,6 @@ public class Table {
 
     private int numberOfColumns;
     private float width;
-
-    @Builder.Default
-    private float borderWidth = 0.2f;
 
     public float getHeight() {
         return rows.stream()
@@ -61,6 +59,14 @@ public class Table {
                 .fontSize(DEFAULT_FONT_SIZE)
                 .textColor(DEFAULT_TEXT_COLOR)
                 .borderColor(DEFAULT_BORDER_COLOR)
+                .borderStyleTop(DEFAULT_BORDER_STYLE)
+                .borderStyleBottom(DEFAULT_BORDER_STYLE)
+                .borderStyleLeft(DEFAULT_BORDER_STYLE)
+                .borderStyleRight(DEFAULT_BORDER_STYLE)
+                .paddingTop(DEFAULT_PADDING)
+                .paddingBottom(DEFAULT_PADDING)
+                .paddingLeft(DEFAULT_PADDING)
+                .paddingRight(DEFAULT_PADDING)
                 .wordBreak(true)
                 .build();
 
@@ -156,6 +162,30 @@ public class Table {
             return this;
         }
 
+        public TableBuilder borderWidth(final float borderWidth) {
+            settings.setBorderWidthTop(borderWidth);
+            settings.setBorderWidthBottom(borderWidth);
+            settings.setBorderWidthLeft(borderWidth);
+            settings.setBorderWidthRight(borderWidth);
+            return this;
+        }
+
+        public TableBuilder borderStyle(final BorderStyleInterface borderStyle) {
+            settings.setBorderStyleTop(borderStyle);
+            settings.setBorderStyleBottom(borderStyle);
+            settings.setBorderStyleLeft(borderStyle);
+            settings.setBorderStyleRight(borderStyle);
+            return this;
+        }
+
+        public TableBuilder padding(final float padding) {
+            settings.setPaddingTop(padding);
+            settings.setPaddingBottom(padding);
+            settings.setPaddingLeft(padding);
+            settings.setPaddingRight(padding);
+            return this;
+        }
+
         public TableBuilder borderColor(final Color borderColor) {
             settings.setBorderColor(borderColor);
             return this;
@@ -222,6 +252,15 @@ public class Table {
                     cell.setColumn(column);
 
                     cell.setWidth(getAvailableCellWidthRespectingSpan(columnIndex, cell.getColSpan()));
+
+
+                    if(cell instanceof TextCell){
+                        TextCell textCell = (TextCell) cell;
+                        if(textCell.hasSuperScript()){
+                            textCell= textCell.getSuperScript();
+                            textCell.getSettings().fillingMergeBy(row.getSettings());
+                        }
+                    }
 
                     columnIndex += cell.getColSpan();
                 }

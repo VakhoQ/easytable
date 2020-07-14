@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.vandeseer.easytable.drawing.Drawer;
 import org.vandeseer.easytable.drawing.cell.AbstractCellDrawer;
-import org.vandeseer.easytable.settings.BorderStyle;
+import org.vandeseer.easytable.settings.BorderStyleInterface;
 import org.vandeseer.easytable.settings.HorizontalAlignment;
 import org.vandeseer.easytable.settings.Settings;
 import org.vandeseer.easytable.settings.VerticalAlignment;
@@ -21,7 +21,7 @@ import java.awt.*;
 @SuperBuilder(toBuilder = true)
 public abstract class AbstractCell {
 
-    public static final float DEFAULT_MIN_HEIGHT = 10f;
+    private static final float DEFAULT_MIN_HEIGHT = 10f;
 
     @Builder.Default
     private final int colSpan = 1;
@@ -48,82 +48,84 @@ public abstract class AbstractCell {
     @Setter(AccessLevel.PROTECTED)
     protected Settings settings;
 
-    @Builder.Default
-    private final float paddingLeft = 4;
+    public float getPaddingBottom() {
+        return settings.getPaddingBottom();
+    }
 
-    @Builder.Default
-    private final float paddingRight = 4;
+    public float getPaddingTop() {
+        return settings.getPaddingTop();
+    }
 
-    @Builder.Default
-    private final float paddingTop = 4;
+    public float getPaddingLeft() {
+        return settings.getPaddingLeft();
+    }
 
-    @Builder.Default
-    private final float paddingBottom = 4;
-
-    @Builder.Default
-    private BorderStyle borderStyleLeft = BorderStyle.SOLID;
-
-    @Builder.Default
-    private BorderStyle borderStyleRight = BorderStyle.SOLID;
-
-    @Builder.Default
-    private BorderStyle borderStyleTop = BorderStyle.SOLID;
-
-    @Builder.Default
-    private BorderStyle borderStyleBottom = BorderStyle.SOLID;
-
-
-    @Builder.Default
-    private float borderWidthTop = 0;
-
-    @Builder.Default
-    private float borderWidthLeft = 0;
-
-    @Builder.Default
-    private float borderWidthRight = 0;
-
-    @Builder.Default
-    private float borderWidthBottom = 0;
+    public float getPaddingRight() {
+        return settings.getPaddingRight();
+    }
 
     public float getHorizontalPadding() {
-        return getPaddingLeft() + getPaddingRight();
+        return settings.getPaddingLeft() + settings.getPaddingRight();
     }
 
     public float getVerticalPadding() {
-        return getPaddingTop() + getPaddingBottom();
+        return settings.getPaddingTop() + settings.getPaddingBottom();
+    }
+
+    public float getBorderWidthTop() {
+        return hasBorderTop()
+                ? settings.getBorderWidthTop()
+                : 0;
     }
 
     public boolean hasBorderTop() {
-        return getBorderWidthTop() > 0;
+        return settings.getBorderWidthTop() != null && settings.getBorderWidthTop() > 0;
     }
 
-
-    public boolean hasBorderStyleTop() {
-        return getBorderStyleTop() !=null && getBorderStyleTop() == BorderStyle.DOTTED;
+    public float getBorderWidthBottom() {
+        return hasBorderBottom()
+                ? settings.getBorderWidthBottom()
+                : 0;
     }
-
-    public boolean hasBorderStyleBottom() {
-        return getBorderStyleBottom()!=null  && getBorderStyleBottom() == BorderStyle.DOTTED;
-    }
-    public boolean hasBorderStyleLeft() {
-        return getBorderStyleLeft() !=null && getBorderStyleLeft() == BorderStyle.DOTTED;
-    }
-
-    public boolean hasBorderStyleRight() {
-        return getBorderStyleRight()!=null && getBorderStyleRight() == BorderStyle.DOTTED;
-    }
-
 
     public boolean hasBorderBottom() {
-        return getBorderWidthBottom() > 0;
+        return settings.getBorderWidthBottom() != null && settings.getBorderWidthBottom() > 0;
+    }
+
+    public float getBorderWidthLeft() {
+        return hasBorderLeft()
+                ? settings.getBorderWidthLeft()
+                : 0;
     }
 
     public boolean hasBorderLeft() {
-        return getBorderWidthLeft() > 0;
+        return settings.getBorderWidthLeft() != null && settings.getBorderWidthLeft() > 0;
+    }
+
+    public float getBorderWidthRight() {
+        return hasBorderRight()
+                ? settings.getBorderWidthRight()
+                : 0;
     }
 
     public boolean hasBorderRight() {
-        return getBorderWidthRight() > 0;
+        return settings.getBorderWidthRight() != null && settings.getBorderWidthRight() > 0;
+    }
+
+    public BorderStyleInterface getBorderStyleTop() {
+        return settings.getBorderStyleTop();
+    }
+
+    public BorderStyleInterface getBorderStyleBottom() {
+        return settings.getBorderStyleBottom();
+    }
+
+    public BorderStyleInterface getBorderStyleLeft() {
+        return settings.getBorderStyleLeft();
+    }
+
+    public BorderStyleInterface getBorderStyleRight() {
+        return settings.getBorderStyleRight();
     }
 
     public boolean hasBackgroundColor() {
@@ -190,10 +192,58 @@ public abstract class AbstractCell {
         protected Settings settings = Settings.builder().build();
 
         public B borderWidth(final float borderWidth) {
-            return this.borderWidthTop(borderWidth)
-                    .borderWidthBottom(borderWidth)
-                    .borderWidthLeft(borderWidth)
-                    .borderWidthRight(borderWidth);
+            settings.setBorderWidthTop(borderWidth);
+            settings.setBorderWidthBottom(borderWidth);
+            settings.setBorderWidthLeft(borderWidth);
+            settings.setBorderWidthRight(borderWidth);
+            return this.self();
+        }
+
+        public B borderWidthTop(final float borderWidth) {
+            settings.setBorderWidthTop(borderWidth);
+            return this.self();
+        }
+
+        public B borderWidthBottom(final float borderWidth) {
+            settings.setBorderWidthBottom(borderWidth);
+            return this.self();
+        }
+
+        public B borderWidthLeft(final float borderWidth) {
+            settings.setBorderWidthLeft(borderWidth);
+            return this.self();
+        }
+
+        public B borderWidthRight(final float borderWidth) {
+            settings.setBorderWidthRight(borderWidth);
+            return this.self();
+        }
+
+        public B borderStyleTop(final BorderStyleInterface style) {
+            settings.setBorderStyleTop(style);
+            return this.self();
+        }
+
+        public B borderStyleBottom(final BorderStyleInterface style) {
+            settings.setBorderStyleBottom(style);
+            return this.self();
+        }
+
+        public B borderStyleLeft(final BorderStyleInterface style) {
+            settings.setBorderStyleLeft(style);
+            return this.self();
+        }
+
+        public B borderStyleRight(final BorderStyleInterface style) {
+            settings.setBorderStyleRight(style);
+            return this.self();
+        }
+
+        public B borderStyle(final BorderStyleInterface style) {
+            return this.borderStyleLeft(style)
+                    .borderStyleRight(style)
+                    .borderStyleBottom(style)
+                    .borderStyleTop(style);
         }
 
         public B padding(final float padding) {
@@ -203,12 +253,24 @@ public abstract class AbstractCell {
                     .paddingRight(padding);
         }
 
+        public B paddingTop(final float padding) {
+            settings.setPaddingTop(padding);
+            return this.self();
+        }
 
-        public B borderStyle(final BorderStyle style) {
-            return this.borderStyleLeft(style)
-                    .borderStyleRight(style)
-                    .borderStyleBottom(style)
-                    .borderStyleTop(style);
+        public B paddingBottom(final float padding) {
+            settings.setPaddingBottom(padding);
+            return this.self();
+        }
+
+        public B paddingLeft(final float padding) {
+            settings.setPaddingLeft(padding);
+            return this.self();
+        }
+
+        public B paddingRight(final float padding) {
+            settings.setPaddingRight(padding);
+            return this.self();
         }
 
         public B horizontalAlignment(final HorizontalAlignment alignment) {
