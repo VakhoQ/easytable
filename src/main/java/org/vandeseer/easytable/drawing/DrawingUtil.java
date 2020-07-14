@@ -5,6 +5,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import java.awt.*;
 import java.io.IOException;
 
+import static org.vandeseer.easytable.settings.BorderStyle.SOLID;
+
 public class DrawingUtil {
 
     private DrawingUtil() {
@@ -26,8 +28,10 @@ public class DrawingUtil {
         contentStream.setLineWidth(line.getWidth());
         contentStream.lineTo(line.getEndX(), line.getEndY());
         contentStream.setStrokingColor(line.getColor());
+        contentStream.setLineDashPattern(line.getBorderStyle().getPattern(), line.getBorderStyle().getPhase());
         contentStream.stroke();
         contentStream.setStrokingColor(line.getResetColor());
+        contentStream.setLineDashPattern(SOLID.getPattern(), SOLID.getPhase());
     }
 
     public static void drawRectangle(PDPageContentStream contentStream, PositionedRectangle rectangle)

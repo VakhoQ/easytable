@@ -27,6 +27,11 @@ public class Settings {
     private Float paddingTop;
     private Float paddingBottom;
 
+    private BorderStyleInterface borderStyleLeft;
+    private BorderStyleInterface borderStyleRight;
+    private BorderStyleInterface borderStyleTop;
+    private BorderStyleInterface borderStyleBottom;
+
     private HorizontalAlignment horizontalAlignment;
     private VerticalAlignment verticalAlignment;
 
@@ -48,6 +53,7 @@ public class Settings {
         fillingMergeFontSettings(settings);
         fillingMergePaddingSettings(settings);
         fillingMergeBorderWidthSettings(settings);
+        fillingMergeBorderStyleSettings(settings);
         fillingMergeColorSettings(settings);
         fillingMergeAlignmentSettings(settings);
         fillingMergeWordBreakSetting(settings);
@@ -93,6 +99,24 @@ public class Settings {
 
         if (getBorderWidthRight() == null && settings.getBorderWidthRight() != null) {
             borderWidthRight = settings.getBorderWidthRight();
+        }
+    }
+
+    private void fillingMergeBorderStyleSettings(Settings settings) {
+        if (getBorderStyleBottom() == null && settings.getBorderStyleBottom() != null) {
+            borderStyleBottom = settings.getBorderStyleBottom();
+        }
+
+        if (getBorderStyleTop() == null && settings.getBorderStyleTop() != null) {
+            borderStyleTop = settings.getBorderStyleTop();
+        }
+
+        if (getBorderStyleLeft() == null && settings.getBorderStyleLeft() != null) {
+            borderStyleLeft = settings.getBorderStyleLeft();
+        }
+
+        if (getBorderStyleRight() == null && settings.getBorderStyleRight() != null) {
+            borderStyleRight = settings.getBorderStyleRight();
         }
     }
 

@@ -40,7 +40,8 @@ public abstract class AbstractCellDrawer<T extends AbstractCell> implements Draw
                             .y(y)
                             .width(cell.getWidth())
                             .height(height)
-                            .color(cell.getBackgroundColor()).build()
+                            .color(cell.getBackgroundColor())
+                            .build()
             );
         }
     }
@@ -79,7 +80,9 @@ public abstract class AbstractCellDrawer<T extends AbstractCell> implements Draw
                         .width(cell.getBorderWidthTop())
                         .color(cellBorderColor)
                         .resetColor(rowBorderColor)
-                        .build());
+                        .borderStyle(cell.getBorderStyleTop())
+                        .build()
+                );
             }
 
             if (cell.hasBorderBottom()) {
@@ -91,7 +94,9 @@ public abstract class AbstractCellDrawer<T extends AbstractCell> implements Draw
                         .width(cell.getBorderWidthBottom())
                         .color(cellBorderColor)
                         .resetColor(rowBorderColor)
-                        .build());
+                        .borderStyle(cell.getBorderStyleBottom())
+                        .build()
+                );
             }
         }
 
@@ -108,7 +113,9 @@ public abstract class AbstractCellDrawer<T extends AbstractCell> implements Draw
                         .width(cell.getBorderWidthLeft())
                         .color(cellBorderColor)
                         .resetColor(rowBorderColor)
-                        .build());
+                        .borderStyle(cell.getBorderStyleLeft())
+                        .build()
+                );
             }
 
             if (cell.hasBorderRight()) {
@@ -120,7 +127,9 @@ public abstract class AbstractCellDrawer<T extends AbstractCell> implements Draw
                         .width(cell.getBorderWidthRight())
                         .color(cellBorderColor)
                         .resetColor(rowBorderColor)
-                        .build());
+                        .borderStyle(cell.getBorderStyleRight())
+                        .build()
+                );
             }
         }
     }
