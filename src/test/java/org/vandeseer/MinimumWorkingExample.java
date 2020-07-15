@@ -51,6 +51,19 @@ public class MinimumWorkingExample {
                                         .superScript(TextCell.builder().text("2").fontSize(6).textRise(5).build())
                                         .build())
                                 .build())
+
+                        .addRow(Row.builder()
+                                .padding(10)
+                                .add(TextCell.builder().text("CENTER").horizontalAlignment(HorizontalAlignment.CENTER).textColor(Color.RED)
+                                        .superScript(TextCell.builder().text("1").fontSize(6).textRise(5).build())
+                                        .build())
+                                .add(TextCell.builder()
+                                        .text("RIGHT").horizontalAlignment(HorizontalAlignment.RIGHT)
+                                        .borderWidth(1)
+                                        .backgroundColor(Color.WHITE)
+                                        .superScript(TextCell.builder().text("2").fontSize(6).textRise(5).build())
+                                        .build())
+                                .build())
                         .build();
 
                 // Set up the drawer
